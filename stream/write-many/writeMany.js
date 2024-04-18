@@ -91,32 +91,32 @@ const fs = require('node:fs/promises');
 //   });
 // })();
 
-// (async () => {
-//   console.time('writeMany');
+(async () => {
+  console.time('writeMany');
 
-//   const fileHandle = await fs.open('test.txt', 'w');
+  const fileHandle = await fs.open('test.txt', 'w');
 
-//   const stream = fileHandle.createWriteStream();
+  const stream = fileHandle.createWriteStream();
 
-//   const drain = () =>
-//     new Promise((resolve) => {
-//       stream.once('drain', () => {
-//         resolve();
-//       });
-//     });
+  const drain = () =>
+    new Promise((resolve) => {
+      stream.once('drain', () => {
+        resolve();
+      });
+    });
 
-//   stream.on('finish', () => fileHandle.close());
+  stream.on('finish', () => fileHandle.close());
 
-//   for (let i = 0; i < 1000000; i++) {
-//     const buff = Buffer.from(` ${i} `, 'utf-8');
-//     const writeable = stream.write(buff);
+  for (let i = 0; i < 50000000; i++) {
+    const buff = Buffer.from(` ${i} `, 'utf-8');
+    const writeable = stream.write(buff);
 
-//     if (!writeable) {
-//       await drain();
-//     }
-//   }
+    if (!writeable) {
+      await drain();
+    }
+  }
 
-//   stream.end();
+  stream.end();
 
-//   console.timeEnd('writeMany');
-// })();
+  console.timeEnd('writeMany');
+})();
